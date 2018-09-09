@@ -1,0 +1,89 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>Signin Template for Bootstrap</title>
+	<link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+	<link th:href="@{/bootstrapTable/bootstrap-table.min.css}" rel="stylesheet">
+	<!-- Custom styles for this template -->
+	<link  th:href="@{/asserts/css/signin.css}" rel="stylesheet">
+
+	<script th:src="@{/jquery/jquery-2.1.0.min.js}"></script>
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	<script th:src="@{/layer/layer.js}"></script>
+	<script th:src="@{/bootstrapTable/bootstrap-table.min.js}"></script>
+	<script th:src="@{/bootstrapTable/locale/bootstrap-table-zh-CN.min.js}"></script>
+</head>
+<body class="text-center">
+<form class="form-signin" >
+	<img class="mb-4" th:src="@{/asserts/img/bootstrap-solid.svg}"  alt="" width="72" height="72">
+	<h1 class="h3 mb-3 font-weight-normal" th:text="#{login.tip}">Please sign in</h1>
+	<label class="sr-only" th:text="#{login.username}">Username</label>
+	<input type="text"  id="username" name="username" class="form-control" placeholder="Username" th:placeholder="#{login.username}" required="" autofocus="">
+	<label class="sr-only" th:text="#{login.password}">Password</label>
+	<input type="password" id="password" name="password" class="form-control" placeholder="Password" th:placeholder="#{login.password}" required="">
+
+	<div class="checkbox mb-3">
+		<label>
+			<input type="checkbox" value="remember-me"/> [[#{login.remember}]]
+		</label>
+	</div>
+	<!--<a class="btn btn-lg btn-primary btn-block" >Sign in</a>-->
+	<button class="btn btn-lg btn-primary btn-block" id="submmit">Sign in</button>
+
+	<p class="mt-5 mb-3 text-muted">© 2017-2018</p>
+	<a class="btn btn-sm" th:href="@{/index.html(locale='zh_CN')}">中文</a>
+	<a class="btn btn-sm" th:href="@{/index.html(locale='en_US')}">English</a>
+</form>
+<script th:inline="javascript">
+	$(function () {
+		$("#submmit").click(function () {
+            var username = $("#username").val();
+            if ( username == "" ) {
+                //alert("用户登录账号不能为空，请输入");
+                layer.msg("用户登录账号不能为空，请输入", {time:2000, icon:5, shift:6}, function(){
+
+                });
+                return;
+            }
+            var password = $("#password").val();
+            if ( password == "" ) {
+                //alert("用户登录密码不能为空，请输入");
+                layer.msg("用户登录密码不能为空，请输入", {time:2000, icon:5, shift:6}, function(){
+
+                });
+                return;
+            }
+
+            var url = [[@{/user/login}]];
+
+            var loadingIndex = null;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    "username": username,
+                    "password": password
+                },
+                beforeSend : function(){
+                    loadingIndex = layer.msg('处理中', {icon: 16});
+                },
+				success:function (result) {
+                    if (result.code == 100) {
+//                        alert("aaaaaa");
+                        window.location.href = [[@{/main}]];
+                    } else {
+                        layer.msg("用户登录账号或密码不正确，请重新输入", {time:2000, icon:5, shift:6}, function(){});
+                    }
+                }
+            })
+                return false;
+        });
+    })
+
+</script>
+</body>
+
+</html>

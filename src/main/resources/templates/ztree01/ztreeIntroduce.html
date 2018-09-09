@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<HTML xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <TITLE> ZTREE DEMO </TITLE>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <!--<link rel="stylesheet" th:href="@{/ztree/css/demo.css}" type="text/css">-->
+    <link rel="stylesheet" th:href="@{/ztree/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+
+    <script th:src="@{/jquery/jquery-2.1.0.min.js}"></script>
+
+    <script th:src="@{/layer/layer.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <!--<script type="text/javascript" th:src="@{/ztree/js/jquery.ztree.core.js}"></script>-->
+    <script type="text/javascript" th:src="@{/ztree/js/jquery.ztree.all.js}"></script>
+
+    <SCRIPT th:inline="javascript">
+        var zTreeObj;
+        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+        var url01 = [[@{/permission/loadData}]];
+        var setting = {
+            check: {
+                enable: true,
+                chkStyle: "checkbox",
+                chkboxType: { "Y": "ps", "N": "ps" }
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            async: {
+                enable: true,
+                url:[[@{/permission/loadData}]]
+            }
+        };
+
+//        var zNodes =[
+//            { id:1, pId:0, name:"随意勾选 1", open:true},
+//            { id:11, pId:1, name:"随意勾选 1-1", open:true},
+//            { id:111, pId:11, name:"随意勾选 1-1-1"},
+//            { id:112, pId:11, name:"随意勾选 1-1-2"},
+//            { id:12, pId:1, name:"随意勾选 1-2", open:true},
+//            { id:121, pId:12, name:"随意勾选 1-2-1"},
+//            { id:122, pId:12, name:"随意勾选 1-2-2"},
+//            { id:2, pId:0, name:"随意勾选 2", checked:true, open:true},
+//            { id:21, pId:2, name:"随意勾选 2-1"},
+//            { id:22, pId:2, name:"随意勾选 2-2", open:true},
+//            { id:221, pId:22, name:"随意勾选 2-2-1", checked:true},
+//            { id:222, pId:22, name:"随意勾选 2-2-2"},
+//            { id:23, pId:2, name:"随意勾选 2-3"}
+//        ];
+        // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+
+        $(document).ready(function(){
+            zTreeObj = $.fn.zTree.init($("#treeF"), setting);
+        });
+    </SCRIPT>
+</HEAD>
+<BODY>
+<!--<div >
+<ul id="treeF" class="ztree"></ul>
+</div>-->
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2 main">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+            </div>
+            <div class="panel-body">
+                <ul id="treeF" class="ztree"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+</BODY>
+</HTML>
+

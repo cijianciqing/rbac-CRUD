@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<HTML xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <TITLE> Role Edit </TITLE>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/ztree/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+
+    <script th:src="@{/jquery/jquery-2.1.0.min.js}"></script>
+
+    <script th:src="@{/layer/layer.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/ztree/js/jquery.ztree.all.js}"></script>
+
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            var userId = [[${param.userId}]];
+            $.ajax({
+                type: "post",
+                url: "/rbac/permission/user/getRoles",
+                data: "userId="+userId,
+                success:function(result){
+                    if(result.code==100){
+                        var assingedRoles = result.extend.assingedRoles;
+                        var unassignRoles = result.extend.unassignRoles;
+                        $.each(unassignRoles,function () {
+                            var unassignedRole = $("<option></option>").append(this.roleName).val(this.roleId);
+                            unassignedRole.appendTo($("#leftList"));
+                        })
+                        $.each(assingedRoles,function () {
+                            var assignedRole = $("<option></option>").append(this.roleName).val(this.roleId);
+                            assignedRole.appendTo($("#rightList"));
+                        })
+                    }else{
+                        layer.msg("用户信息查询失败", {time:2000, icon:5, shift:6}, function(){
+                        });
+                    }
+                }
+            })
+        });
+    </script>
+</HEAD>
+<BODY>
+<!--<h1>[[${param.roleId}]]</h1>-->
+<!--<br>-->
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+    <ol class="breadcrumb">
+        <li><a href="#">权限设置</a></li>
+        <li><a href="#">用户</a></li>
+        <li class="active">分配角色</li>
+    </ol>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form id="roleForm" role="form" class="form-inline">
+                <input type="hidden" name="userId" th:value="${param.userId}">
+                <div class="form-group">
+                    <label for="leftList">未分配角色列表</label><br>
+                    <select id="leftList" name="unassignroleids" class="form-control" multiple size="10" style="width:200px;overflow-y:auto;">
+
+                    </select>
+                </div>
+                <div class="form-group">
+                    <ul>
+                        <li id="left2RightBtn" class="btn btn-default glyphicon glyphicon-chevron-right"></li>
+                        <br>
+                        <li id="right2LeftBtn" class="btn btn-default glyphicon glyphicon-chevron-left" style="margin-top:20px;"></li>
+                    </ul>
+                </div>
+                <div class="form-group" style="margin-left:40px;">
+                    <label for="rightList">已分配角色列表</label><br>
+                    <select id="rightList" name="assignroleids" class="form-control" multiple size="10" style="width:200px;overflow-y:auto;">
+
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    $("#left2RightBtn").click(function(){
+        var opts = $("#leftList :selected");
+        if ( opts.length == 0 ) {
+            layer.msg("请选择需要分配的角色数据", {time:2000, icon:5, shift:6}, function(){
+
+            });
+        } else {
+
+            $.ajax({
+                type : "post",
+                url  : "/rbac/permission/user/doAssign",
+                data : $("#roleForm").serialize(),
+                success : function(result) {
+                    if ( result.code==100 ) {
+                        $("#rightList").append(opts);
+                        layer.msg("分配角色数据成功", {time:2000, icon:6}, function(){
+                        });
+                    } else {
+                        layer.msg("分配角色数据失败", {time:2000, icon:5, shift:6}, function(){
+                        });
+                    }
+                }
+            });
+        }
+    });
+    $("#right2LeftBtn").click(function(){
+        var opts = $("#rightList :selected");
+        if ( opts.length == 0 ) {
+            layer.msg("请选择需要取消分配的角色数据", {time:2000, icon:5, shift:6}, function(){
+
+            });
+        } else {
+            $.ajax({
+                type : "post",
+                url  : "/rbac/permission/user/undoAssign",
+                data : $("#roleForm").serialize(),
+                success : function(result) {
+                    if ( result.code==100 ) {
+                        $("#leftList").append(opts);
+                        layer.msg("取消分配角色数据成功", {time:2000, icon:6}, function(){
+                        });
+                    } else {
+                        layer.msg("取消分配角色数据失败", {time:2000, icon:5, shift:6}, function(){
+                        });
+                    }
+                }
+            });
+
+        }
+    });
+</script>
+</BODY>
+</HTML>
+

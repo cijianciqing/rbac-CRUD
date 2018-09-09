@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<HTML xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <TITLE> User Edit </TITLE>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/ztree/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+
+    <script th:src="@{/jquery/jquery-2.1.0.min.js}"></script>
+
+    <script th:src="@{/layer/layer.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/ztree/js/jquery.ztree.all.js}"></script>
+
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            var userId = [[${param.userId}]];
+                  $.ajax({
+                      type: "get",
+                      url: "/rbac/permission/user/getOne",
+                      data: "userId="+userId,
+                      success:function(result){
+                          if(result.code==100){
+                              var user = result.extend.user;
+                              $("#userName").val(user.userName);
+                              $("#userPassword").val(user.userPassword);
+                              $("#userId").val(user.userId);
+                          }else{
+                              layer.msg("用户信息查询失败", {time:2000, icon:5, shift:6}, function(){
+                              });
+                          }
+                      }
+                  })
+        });
+    </script>
+</HEAD>
+<BODY>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="panel panel-primary">
+            <div class="panel-heading" id="userEdit">用户信息编辑</div>
+            <div class="panel-body">
+                <form>
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="userId" name="userId">
+                    </div>
+                    <div class="form-group">
+                        <label for="userName">User Name</label>
+                        <input type="text" class="form-control" id="userName" name="userName" placeholder="用户名">
+                    </div>
+                    <div class="form-group">
+                        <label for="userPassword">Password</label>
+                        <input type="password" class="form-control" id="userPassword" name="userPassword" placeholder="Password">
+                    </div>
+                    <button type="submit" id="userUpdateBtn" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    $(function () {
+        $("#userUpdateBtn").click(function () {
+            $.ajax({
+                url:"/rbac/permission/user/update",
+                data: $("form").serialize(),
+                type:"put",
+                success:(function(result){
+                    if ( result.code==100 ) {
+                        layer.msg("分配许可信息成功", {time:2000, icon:6}, function(){
+                            //成功后跳转到用户首页
+                            window.location.href="/rbac/permission/user/list";
+                        });
+                    } else {
+                        layer.msg("分配许可信息失败", {time:2000, icon:5, shift:6}, function(){
+                        });
+                    }
+                })
+            })
+
+            return false;
+        })
+    })
+</script>
+</BODY>
+</HTML>
+

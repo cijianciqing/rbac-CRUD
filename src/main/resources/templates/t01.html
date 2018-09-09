@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Title</title>
+
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/bootstrapTable/bootstrap-table.min.css}" rel="stylesheet">
+
+    <script th:src="@{/jquery/jquery-2.1.0.min.js}"></script>
+    <script th:src="@{/layer/layer.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/bootstrapTable/bootstrap-table.min.js}"></script>
+    <script th:src="@{/bootstrapTable/locale/bootstrap-table-zh-CN.min.js}"></script>
+    <!--内部联动-->
+<script th:inline="javascript">
+    $(function () {
+        $("#btnT").click(function () {
+        alert("aaa");
+         window.location.href="t02";
+
+            return false;
+            });
+
+
+        })
+</script>
+</head>
+<body>
+<h1>T01</h1>
+<br>
+<!--<a th:href="@{/t02}">To T02</a>-->
+<button id="btnT">To T02 </button>
+</body>
+</html>
